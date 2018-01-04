@@ -137,7 +137,7 @@ class Classifier():
 		self.vocab_size = -1
 		self.tokenizer = Tokenizer() # create the tokenizer
 		#self.raw_embedding = load_embedding(filename='glove/glove.6B.200d.txt')
-		self.raw_embedding = load_embedding(filename='experiments/best_fake_news/glove.6B.300d.txt')
+		self.raw_embedding = load_embedding(filename='experiments/keras_glove/glove.6B.300d.txt')
 		self.metaclf = RandomForestClassifier()
 
 	def fit(self, X, y):
