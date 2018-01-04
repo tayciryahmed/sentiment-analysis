@@ -69,20 +69,6 @@ def load_embedding(filename):
 		embedding[parts[0]] = np.asarray(parts[1:], dtype='float32')
 	return embedding
 
-def load_embedding(filename):
-	# load embedding into memory, skip first line
-	#url_opened = urllib.request.urlopen(url)
-	#zipped = zipfile.ZipFile(io.BytesIO(url_opened.read()))
-
-	lines = open(filename).readlines()[1:]
-	# create a map of words to vectors
-	embedding = dict()
-	for line in lines:
-		parts = line.split()
-		# key is string word, value is numpy array for vector
-		embedding[parts[0].decode('utf-8') ] = np.asarray(parts[1:], dtype='float32')
-	return embedding
-
 # create a weight matrix for the Embedding layer from a loaded embedding
 def get_weight_matrix(embedding, vocab):
 	# total vocabulary size plus 0 for unknown words
