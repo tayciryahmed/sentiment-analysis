@@ -8,4 +8,4 @@ $ python main.py <name_experiment>
 ## To add an experiment: 
 Just add a classifier and a feature extractor classes in the directory `experiments`.
 ## To get the data:
-Refer to [this webpage] (https://www.cs.york.ac.uk/semeval-2013/task2/index.php%3Fid=data.html). 
+Refer to <a href="https://www.cs.york.ac.uk/semeval-2013/task2/index.php%3Fid=data.html">this webpage</a>. 
