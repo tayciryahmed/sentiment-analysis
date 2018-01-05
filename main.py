@@ -1,5 +1,5 @@
 import sys
-sys.path.append('experiments/'+sys.argv[1])
+sys.path.append('experiments/' + sys.argv[1])
 
 from feature_extractor import FeatureExtractor
 from classifier import Classifier
@@ -10,13 +10,14 @@ from sklearn.model_selection import train_test_split
 
 le = preprocessing.LabelEncoder()
 
+
 def load_data(filename, test=False):
 
-    df = pd.read_csv(filename, sep='\t', header=None, usecols=[2,3], \
-                                names=['class', 'text'])
+    df = pd.read_csv(filename, sep='\t', header=None, usecols=[2, 3],
+                     names=['class', 'text'])
 
-    df.loc[df['class']=='objective-OR-neutral'] = 'neutral'
-    df.loc[ df['class']=='objective'] = 'neutral'
+    df.loc[df['class'] == 'objective-OR-neutral'] = 'neutral'
+    df.loc[df['class'] == 'objective'] = 'neutral'
 
     X = df['text']
     y = df['class']
@@ -28,17 +29,22 @@ def load_data(filename, test=False):
 
     return X, y
 
+
 # load data
 X_train, y_train = load_data('data/train.csv')
 X_valid, y_valid = load_data('data/valid.csv', test=True)
 
-"""print len(y_valid[y_valid==0])/float(len(y_valid))
-print len(y_valid[y_valid==1])/float(len(y_valid))
-print len(y_valid[y_valid==2])/float(len(y_valid))
+print "Data statistics"
 
-print len(y_train[y_train==0])/float(len(y_train))
-print len(y_train[y_train==1])/float(len(y_train))
-print len(y_train[y_train==2])/float(len(y_train))"""
+print X_train.shape, X_valid.shape
+
+print len(y_valid[y_valid == 0]) / float(len(y_valid))
+print len(y_valid[y_valid == 1]) / float(len(y_valid))
+print len(y_valid[y_valid == 2]) / float(len(y_valid))
+
+print len(y_train[y_train == 0]) / float(len(y_train))
+print len(y_train[y_train == 1]) / float(len(y_train))
+print len(y_train[y_train == 2]) / float(len(y_train))
 
 
 # preprocess data
