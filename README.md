@@ -1,4 +1,4 @@
-# sentiment-analysis
+# Sentiment analysis
 Machine learning models for sentiment analysis on tweets. 
 
 ## To run the code: 
