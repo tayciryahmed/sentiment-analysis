@@ -13,11 +13,12 @@ def token_processor(tokens):
     for t in tokens:
         yield t
 
+
 class FeatureExtractor(TfidfVectorizer):
 
     def __init__(self):
         super(FeatureExtractor, self).__init__(
-                analyzer='word', preprocessor=document_preprocessor)
+            analyzer='word', preprocessor=document_preprocessor)
 
     def fit(self, X_df, y=None):
         super(FeatureExtractor, self).fit(X_df)
