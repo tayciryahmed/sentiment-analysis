@@ -16,8 +16,8 @@ def load_data(filename, test=False):
     df = pd.read_csv(filename, sep='\t', header=None, usecols=[2, 3],
                      names=['class', 'text'])
 
-    df.loc[df['class'] == 'objective-OR-neutral']['class'] = 'neutral'
-    df.loc[df['class'] == 'objective']['class'] = 'neutral'
+    df.loc[df['class'] == 'objective-OR-neutral','class'] = 'neutral'
+    df.loc[df['class'] == 'objective','class'] = 'neutral'
 
     X = df['text']
     y = df['class']
