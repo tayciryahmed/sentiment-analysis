@@ -34,17 +34,17 @@ def load_data(filename, test=False):
 X_train, y_train = load_data('data/train.csv')
 X_valid, y_valid = load_data('data/valid.csv', test=True)
 
-print "Data statistics"
+#print "Data statistics"
 
-print X_train.shape, X_valid.shape
+#print X_train.shape, X_valid.shape
 
-print len(y_valid[y_valid == 0]) / float(len(y_valid))
-print len(y_valid[y_valid == 1]) / float(len(y_valid))
-print len(y_valid[y_valid == 2]) / float(len(y_valid))
+#print len(y_valid[y_valid == 0]) / float(len(y_valid))
+#print len(y_valid[y_valid == 1]) / float(len(y_valid))
+#print len(y_valid[y_valid == 2]) / float(len(y_valid))
 
-print len(y_train[y_train == 0]) / float(len(y_train))
-print len(y_train[y_train == 1]) / float(len(y_train))
-print len(y_train[y_train == 2]) / float(len(y_train))
+#print len(y_train[y_train == 0]) / float(len(y_train))
+#print len(y_train[y_train == 1]) / float(len(y_train))
+#print len(y_train[y_train == 2]) / float(len(y_train))
 
 
 # preprocess data
@@ -58,4 +58,5 @@ clf.fit(X_train, y_train)
 y_pred = clf.predict(X_valid)
 
 # predict
-print accuracy_score(y_valid, y_pred)
+#print accuracy_score(y_valid, y_pred)
+print(accuracy_score(y_valid, y_pred))

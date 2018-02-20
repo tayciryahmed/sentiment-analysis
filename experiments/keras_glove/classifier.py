@@ -39,8 +39,8 @@ def clean_text_simple(text, my_stopwords=stpwrds, punct=punct, remove_stopwords=
     text = re.sub(' +', ' ', text)  # strip extra white space
     text = text.strip()  # strip leading and trailing white space
     tokens = text.split()  # tokenize (split based on whitespace)
-    tokens = [w for w in tokens if w.isalpha()]
-    tokens = [w for w in tokens if len(w) > 1]
+    tokens = [w for w in tokens if w.isalpha()] # keep words with alphabetic characters
+    tokens = [w for w in tokens if len(w) > 1]  # remove words with lenght=1
 
     if remove_stopwords:
         # remove stopwords from 'tokens'
