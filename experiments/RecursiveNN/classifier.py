@@ -82,7 +82,7 @@ class Classifier():
         if self.use_pretrained_embeddings: 
             # get vectors in the right order according to the vocab
             raw_embedding = load_embedding(
-            filename='experiments/keras_glove/glove.6B/glove.6B.{}d.txt'.format(self.embed_size))
+            filename='experiments/glove.6B/glove.6B.{}d.txt'.format(self.embed_size))
             embedding_vectors = arrange_embeddings(raw_embedding, self.vocab, self.embed_size)
             self.model.embedding.weight.data = torch.Tensor(embedding_vectors)
         
