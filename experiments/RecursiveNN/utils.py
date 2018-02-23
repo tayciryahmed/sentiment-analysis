@@ -82,11 +82,11 @@ def load_embedding(filename):
         embedding[parts[0]] = np.asarray(parts[1:], dtype='float32')
     return embedding
 
-def arrange_embeddings(embeddings, vocab):
+def arrange_embeddings(embeddings, vocab, embed_size):
     # total vocabulary size plus 0 for unknown words
     vocab_size = vocab.__len__()
     # define weight matrix dimensions with all 0
-    arranged_embeddings = np.zeros((vocab_size, 300))
+    arranged_embeddings = np.zeros((vocab_size, embed_size))
     for index in range(vocab_size):
         word = vocab.decode(index)
         vector = embeddings.get(word)

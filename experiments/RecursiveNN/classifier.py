@@ -66,6 +66,8 @@ class Classifier():
         self.max_epochs = 30
         self.lr = 0.01
         self.use_pretrained_embeddings = True
+        # Fix the embeddings parameters during training
+        self.fix_embeddings = False
         self.vocab = Vocab()
 
     def fit(self, X, y):
@@ -80,12 +82,15 @@ class Classifier():
         if self.use_pretrained_embeddings: 
             # get vectors in the right order according to the vocab
             raw_embedding = load_embedding(
-            filename='experiments/keras_glove/glove.6B/glove.6B.300d.txt')
-            embedding_vectors = arrange_embeddings(raw_embedding, self.vocab)
+            filename='experiments/keras_glove/glove.6B/glove.6B.{}d.txt'.format(self.embed_size))
+            embedding_vectors = arrange_embeddings(raw_embedding, self.vocab, self.embed_size)
             self.model.embedding.weight.data = torch.Tensor(embedding_vectors)
         
         train_loss_history = []
         optimizer = torch.optim.SGD(self.model.parameters(), lr=self.lr, momentum=0.9, dampening=0.0)
+        if self.fix_embeddings:
+            self.model.embedding.weight.requires_grad = False
+            optimizer = torch.optim.SGD(filter(lambda p: p.requires_grad, self.model.parameters()), lr=self.lr, momentum=0.9, dampening=0.0)
         training_start_time = time.time()
         for epoch in range(self.max_epochs):
             print("epoch = ", epoch)
@@ -128,7 +133,7 @@ class Classifier():
                     if step % self.batch_size == 0 and step > 0:
                         optimizer.step()
             print("Epoch done, took {:.2f}s".format(time.time() - training_start_time))
-            model_path = "recursiveNN_model_epoch{}.pth".format(epoch)
+            model_path = "experiments/RecursiveNN/recursiveNN_model_epoch{}_embedsize{}.pth".format(epoch, self.embed_size)
             torch.save(self.model.state_dict(), model_path)
         plt.figure()
         plt.plot(train_loss_history)
