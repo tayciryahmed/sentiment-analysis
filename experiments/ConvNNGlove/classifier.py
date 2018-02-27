@@ -53,7 +53,41 @@ def clean_text_simple(text, my_stopwords=stpwrds, punct=punct, remove_stopwords=
 
     return tokens
 
+# load embedding as a dict
+
+
+def load_embedding(filename):
+    # load embedding into memory, skip first line
+    file = open(filename, 'r')
+    lines = file.readlines()[1:]
+    #lines = file.readlines()
+    file.close()
+    # create a map of words to vectors
+    embedding = dict()
+    for line in lines:
+        parts = line.split()
+        # key is string word, value is numpy array for vector
+        embedding[parts[0]] = np.asarray(parts[1:], dtype='float32')
+    return embedding
+
+# create a weight matrix for the Embedding layer from a loaded embedding
+
+
+def get_weight_matrix(embedding, vocab):
+    # total vocabulary size plus 0 for unknown words
+    vocab_size = len(vocab) + 1
+    # define weight matrix dimensions with all 0
+    weight_matrix = np.zeros((vocab_size, 300))
+    # step vocab, store vectors using the Tokenizer's integer mapping
+    for word, i in vocab.items():
+        vector = embedding.get(word)
+        if vector is not None:
+            weight_matrix[i] = vector
+    return weight_matrix
+
 # Function to create model, required for KerasClassifier
+
+
 def create_model1(max_length=500, vocab_size=500):
     # create model
     model = Sequential()
@@ -72,12 +106,33 @@ def create_model1(max_length=500, vocab_size=500):
 # Function to create model, required for KerasClassifier
 
 
+def create_model2(embedding_vectors=[], max_length=0, vocab_size=0):
+    # create the embedding layer
+    embedding_layer = Embedding(
+        vocab_size, 300, weights=embedding_vectors, input_length=max_length, trainable=False)
+    # define model
+    model = Sequential()
+    model.add(embedding_layer)
+    model.add(Conv1D(filters=256, kernel_size=8, activation='relu'))
+    model.add(MaxPooling1D(pool_size=2))
+    model.add(Dropout(0.2))
+    model.add(Flatten())
+    model.add(Dense(20, activation='relu'))
+    model.add(Dense(3, activation='softmax'))
+    # Compile model
+    model.compile(loss='categorical_crossentropy', optimizer='adam',
+                  metrics=[metrics.categorical_accuracy])
+    return model
+
+
 class Classifier():
     def __init__(self):
         self.min_occur = 1
         self.max_length = -1
         self.vocab_size = -1
         self.tokenizer = Tokenizer()  # create the tokenizer
+        self.raw_embedding = load_embedding(
+            filename='data/glove.6B.300d.txt')
 
     def fit(self, X, y):
 
@@ -101,6 +156,9 @@ class Classifier():
         self.max_length = max([len(s.split()) for s in train_statements])
         self.vocab_size = len(self.tokenizer.word_index) + 1
 
+        # get vectors in the right order
+        embedding_vectors = get_weight_matrix(
+            self.raw_embedding, self.tokenizer.word_index)
 
         encoded_statements = self.tokenizer.texts_to_sequences(
             train_statements)
@@ -109,7 +167,8 @@ class Classifier():
 
         self.clf2 = KerasClassifier(
             build_fn=create_model1, max_length=self.max_length, vocab_size=self.vocab_size, epochs=12)
-        self.clf = KerasClassifier(build_fn=create_model1, max_length=self.max_length, vocab_size=self.vocab_size, epochs=12)
+        self.clf = KerasClassifier(build_fn=create_model2, embedding_vectors=[
+                                   embedding_vectors], max_length=self.max_length, vocab_size=self.vocab_size, epochs=12)
 
         self.clf.fit(Xtrain, ytrain, epochs=12)
         self.clf2.fit(Xtrain, ytrain, epochs=12)
